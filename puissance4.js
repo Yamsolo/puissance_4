@@ -1,4 +1,57 @@
 // Tapez votre code Javascript ici
+/*
+function IA(largeur)
+{
+  return(Hasard(largeur));
+}
+*/
+
+function recherche_horizontale(longueur, largeur, plateau)
+{
+  var i = 0;
+  var j = 0;
+  var p = 0;
+  var colonne = 0;
+  var max = 0;
+  var compteur = [];
+  
+  while (j + 3 < longueur)
+  {
+    i = 0;
+    compteur[j] = 0;
+    while (i < largeur)
+    {
+      p = 0;
+      while (p < 3)
+      {
+        if (plateau[j + p][i] == "(x)")
+          compteur[j] = compteur[j] + 1;
+        else if (plateau[j + p][i] == "(o)")
+          compteur[j] = 0;
+        p++;
+      }
+      if (compteur[j] > max)
+        max = compteur[j];
+      //Ecrire(max);
+      Ecrire(compteur[j]);
+      i++;
+    }
+    j++;
+  }
+  return(max);
+}
+
+function recherche(longueur, largeur, plateau)
+{
+  recherche_horizontale(longueur, largeur, plateau);
+}
+
+function IA(longueur, largeur, plateau)
+{
+  recherche(longueur, largeur, plateau);
+  return(-1);
+}
+
 function creation_carte(longueur, largeur)
 {
 	var plateau = []; // je créé un premier tableau
@@ -32,7 +85,9 @@ function jouer(plateau, joueur, nb, longueur, largeur)
   	var test = 0;
   	
   	Ecrire(joueur+ " à toi de jouer");
-	y = enEntier(Saisie("Quelle colonne?") - 1);
+    (nb == 1 ? y = enEntier(Saisie("Quelle colonne?") - 1) : y = IA(longueur, largeur, plateau));
+  	if (y == -1)
+      return(1);
     if (y > largeur - 1) // on demande la colonne, on vérifie si c'est bien.
     {
       Ecrire("pas assez de colonne");
@@ -147,7 +202,7 @@ function verification_diagonale_gauche(plateau, longueur, largeur)
   var i = largeur - 1;
   var j = 0;
   
-  while (j < longueur)
+  while (j + 3 < longueur)
   {
     i = largeur - 1;
     while (i - 3 >= 0)
@@ -202,3 +257,4 @@ while (42)
   	if (verification(plateau, longueur, largeur) == 1) // verification de victoire pour le J2
       break;
 }
+
