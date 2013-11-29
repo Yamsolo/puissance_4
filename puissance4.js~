@@ -1,0 +1,204 @@
+// Tapez votre code Javascript ici
+function creation_carte(longueur, largeur)
+{
+	var plateau = []; // je créé un premier tableau
+	var i = 0;
+	var j = 0;
+
+	while (j < longueur) // on parcourt chaque case jusqu'à la longueur du tableau défini par le joueur
+	{
+		i = 0;
+		plateau[j] = []; // chaque case de mon tableau sera un tableau
+		while (i < largeur) // on parcourt de même pour la largeur !
+        {
+    		plateau[j][i] = '( )'; // initialisation de chaque case
+    		i++;
+        }
+  	  	j++;
+	}
+  return(plateau);
+}
+
+function affichage_carte(plateau)
+{
+	for (var i = plateau.length - 1; i >= 0; i--) // je pars de la fin de mon premier tableau pour que [0][0] soit en bas à gauche
+	  Ecrire(plateau[i]);
+}
+
+function jouer(plateau, joueur, nb, longueur, largeur)
+{
+  	var x = 0;
+	var y;
+  	var test = 0;
+  	
+  	Ecrire(joueur+ " à toi de jouer");
+	y = enEntier(Saisie("Quelle colonne?") - 1);
+    if (y > largeur - 1) // on demande la colonne, on vérifie si c'est bien.
+    {
+      Ecrire("pas assez de colonne");
+      return(1);
+    } // saisie - 1 pour ne pas choisir la "zérotième collone"
+  	do
+    {
+      if (plateau[x][y] == "( )")
+      {
+        (nb == 1 ? plateau[x][y] = "(x)" : plateau[x][y] = "(o)"); // une ternaire pour savoir quel joueur joue !
+        test = 1;
+      }
+      else
+        x++; // si la ligne une est prise, on monte pour le mettre au dessus!
+    } while (x < longueur && test == 0); // une boucle DO ! #proud #lol
+	if (test == 0)
+    {
+      Ecrire("colonne pleine !");
+	  jouer(plateau, joueur, nb, longueur, largeur);
+    }
+	else
+    {
+	  EffacerEcran();
+      affichage_carte(plateau);
+    }
+    return(plateau);
+}
+
+function verification_horizontale(plateau, longueur, largeur)
+{
+  var i;
+  var j;
+  
+  j = 0;
+  while (j < longueur)
+  {
+    i = 0;
+	while(i + 3 < largeur)
+    {
+      if (plateau[j][i] != '( )'
+         && (plateau[j][i] == "(x)" && plateau[j][i + 1] == "(x)" && plateau[j][i + 2] == "(x)"
+             && plateau[j][i + 3] == "(x)")
+         || (plateau[j][i] == "(o)" && plateau[j][i + 1] == "(o)" && plateau[j][i + 2] == "(o)"
+            && plateau[j][i + 3] == "(o)"))
+      {
+        Ecrire("Victoire!");
+        return(1);
+      }
+      else
+        i++;
+    }
+    j++;
+   }
+  return(0);
+}
+
+function verification_verticale(plateau, longueur, largeur)
+{
+  var i = 0;
+  var j;
+  
+  while (i < largeur) // on parcourt le tableau en largeur
+  {
+    j = 0;
+    while (j + 3 < longueur)
+    {
+      if (plateau[j][i] != "( )"
+          && (plateau[j][i] == "(x)" && plateau[j + 1][i] == "(x)" && plateau[j + 2][i] == "(x)" 
+               && plateau[j + 3][i] == "(x)")
+         || (plateau[j][i] == "(o)" && plateau[j + 1][i] == "(o)" && plateau[j + 2][i] == "(o)" 
+               && plateau[j + 3][i] == "(o)")) // on vérifie si y'en a 4 pareil
+      {
+        Ecrire("Victoire");
+      	return(1); // on annonce que la partie est terminée
+      }
+      else
+        j++;
+    }
+    i++;
+  }
+  return(0);
+}
+
+function verification_diagonale_droite(plateau, longueur, largeur)
+{
+  var i = 0;
+  var j = 0;
+  
+  while (j + 3 < longueur)
+  {
+    i = 0;
+    while (i + 3 < largeur)
+    {
+      if (plateau[j][i] != "( )" && (plateau[j][i] == "(x)" && plateau[j + 1][i + 1] == "(x)"
+                                    && plateau[j + 2][i + 2] == "(x)" && plateau[j + 3][i + 3] == "(x)")
+         || (plateau[j][i] == "(o)" && plateau[j + 1][i + 1] == "(o)"
+                                    && plateau[j + 2][i + 2] == "(o)" && plateau[j + 3][i + 3] == "(o)"))
+      {
+        Ecrire("Victoire !");
+        return(1);
+      }
+      else
+        i++;
+    }
+    j++;
+  }
+  return(0);
+}
+
+function verification_diagonale_gauche(plateau, longueur, largeur)
+{
+  var i = largeur - 1;
+  var j = 0;
+  
+  while (j < longueur)
+  {
+    i = largeur - 1;
+    while (i - 3 >= 0)
+    {
+      if (plateau[j][i] != "( )" && (plateau[j][i] == "(x)" 
+                                    && plateau[j + 1][i - 1] == "(x)"
+                                    && plateau[j + 2][i - 2] == "(x)" 
+                                    && plateau[j + 3][i - 3] == "(x)")
+        || (plateau[j][i] == "(o)" && plateau[j + 1][i - 1] == "(o)"
+                                    && plateau[j + 2][i - 2] == "(o)" 
+            						&& plateau[j + 3][i - 3] == "(o)"))
+      {
+        Ecrire("Victoire !");
+        return(1);
+      }
+      else
+        i--;
+    }
+    j++;
+  }
+  return(0);
+}
+
+function verification(plateau, longueur, largeur)
+{
+  if (verification_horizontale(plateau, longueur, largeur) == 1) // verification horizontale de victoire
+    return(1); // on return 1 pour annoncer que la partie est terminée
+  if (verification_verticale(plateau, longueur, largeur) == 1)
+    return(1);
+  if (verification_diagonale_droite(plateau, longueur, largeur) == 1)
+    return(1);
+  if (verification_diagonale_gauche(plateau, longueur, largeur) == 1)
+    return(1);
+  // vérification diagonale
+}
+
+// C'est ici que tout commence.
+var largeur = Saisie("Largeur du plateau");
+var longueur = Saisie("Longueur du plateau");
+var joueur1 = Saisie("Nom du joueur 1");
+var joueur2 = Saisie("Nom du joueur 2");
+var plateau = creation_carte(longueur, largeur); // création de la carte
+affichage_carte(plateau);
+while (42)
+{
+	if ((plateau = jouer(plateau, joueur1, 1, longueur, largeur)) == 1)
+      break; // on actualise le plateau en fonction du choix de J1
+  	if (verification(plateau, longueur, largeur) == 1) // verification de victoire pour J1
+      break; // la partie se termine
+    if ((plateau = jouer(plateau, joueur2, 2, longueur, largeur)) == 1)
+      break; 
+  	if (verification(plateau, longueur, largeur) == 1) // verification de victoire pour le J2
+      break;
+}
