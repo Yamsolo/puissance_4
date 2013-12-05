@@ -1,4 +1,5 @@
 // Tapez votre code Javascript ici
+// Tapez votre code Javascript ici
 /*
 function IA(largeur)
 {
@@ -12,32 +13,40 @@ function recherche_horizontale(longueur, largeur, plateau)
   var j = 0;
   var p = 0;
   var colonne = 0;
-  var max = 0;
+  var max = [];
+  max[0] = [];
+  var x = 0;
   var compteur = [];
   
   while (j + 3 < longueur)
   {
     i = 0;
-    compteur[j] = 0;
     while (i < largeur)
     {
+      compteur[x] = [];
+      compteur[x][0] = 0;
       p = 0;
-      while (p < 3)
+      while (p < 4)
       {
-        if (plateau[j + p][i] == "(x)")
-          compteur[j] = compteur[j] + 1;
-        else if (plateau[j + p][i] == "(o)")
-          compteur[j] = 0;
+        if (plateau[j][i + p] == "(x)")
+          compteur[x][0] = compteur[x][0] + 1;
+        else if (plateau[j][i + p] == "(o)")
+          compteur[x][0] = 0;
         p++;
       }
-      if (compteur[j] > max)
-        max = compteur[j];
+      if (compteur[x][0] > max)
+      {
+        max[0][0] = j+ 1;
+        max[0][1] = i + 1;
+      }
       //Ecrire(max);
-      Ecrire(compteur[j]);
+//      Ecrire(compteur[x][0]);
       i++;
+      x++;
     }
     j++;
   }
+  Ecrire(max);
   return(max);
 }
 
